@@ -1,0 +1,32 @@
+#################################################################
+#
+#   MiniFilter Program: 003
+#   Description: Finds high-value, non-test orders from North
+#                America in Q4 2024 that are either flagged for
+#                review or have been returned.
+#
+#   This query demonstrates:
+#   - Selection of specific fields.
+#   - Nested logical conditions with AND/OR.
+#   - Explicit grouping with parentheses.
+#   - Comparisons against string, boolean, and numeric literals.
+#
+#################################################################
+
+SELECT
+    order_id,
+    customer_email,
+    total_amount,
+    order_status
+FROM
+    all_orders
+WHERE
+    (shipping_country == "USA" OR shipping_country == "Canada")
+    AND
+    (is_flagged_for_review == true OR order_status == "RETURNED")
+    AND
+    total_amount >= 1500.00
+    AND
+    is_test_order != true
+    AND
+    order_timestamp >= 1727740800;

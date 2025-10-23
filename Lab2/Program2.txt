@@ -1,0 +1,26 @@
+#################################################################
+#
+#   MiniFilter Program: 004
+#   Description: Finds all IoT sensors that are in an error
+#                state, offline, or have low battery.
+#
+#   This query demonstrates:
+#   - Combining OR and AND logic.
+#   - Using the "!=" (not equal) operator multiple times.
+#   - Selecting a list of problem devices for a
+#     maintenance report.
+#
+#################################################################
+
+SELECT
+    sensor_id,
+    location_floor,
+    location_room,
+    last_status,
+    battery_level
+FROM
+    iot_sensor_grid
+WHERE
+    (last_status != "active" AND last_status != "standby")
+    OR
+    battery_level < 15;
