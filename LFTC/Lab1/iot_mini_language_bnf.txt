@@ -1,0 +1,206 @@
+================================================================================
+BNF GRAMMAR FOR IoT DATA PROCESSING MINI LANGUAGE
+================================================================================
+
+LANGUAGE: IoTScript
+PURPOSE: Domain-specific language for IoT sensor data processing, filtering,
+         transformation, and automated response actions
+VERSION: 1.0
+
+================================================================================
+LEXICAL GRAMMAR
+================================================================================
+
+<letter>          ::= 'a' | 'b' | 'c' | ... | 'z' | 'A' | 'B' | ... | 'Z'
+<digit>           ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+<alphanumeric>    ::= <letter> | <digit>
+
+<identifier>      ::= <letter> { <alphanumeric> | '_' }
+<number>          ::= <integer> | <float>
+<integer>         ::= [ '-' ] <digit> { <digit> }
+<float>           ::= [ '-' ] <digit> { <digit> } '.' <digit> { <digit> }
+                    | [ '-' ] '.' <digit> { <digit> }
+
+<string>          ::= '"' { <any_char_except_quote> } '"'
+                    | "'" { <any_char_except_apostrophe> } "'"
+
+<boolean>         ::= 'true' | 'false'
+
+<comment>         ::= '//' { <any_char> } <newline>
+                    | '/*' { <any_char> } '*/'
+
+<whitespace>      ::= ' ' | '\t' | '\n' | '\r'
+
+================================================================================
+KEYWORDS (RESERVED WORDS)
+================================================================================
+
+read            - Read sensor data
+filter          - Filter data based on conditions
+transform       - Transform data values
+emit            - Output/send data
+alert           - Trigger alert action
+var             - Variable declaration
+if              - Conditional statement
+else            - Alternative condition
+while           - Loop construct
+for             - Iteration construct
+in              - Used in for loops
+and             - Logical AND
+or              - Logical OR
+not             - Logical NOT
+avg             - Average aggregation
+sum             - Sum aggregation
+max             - Maximum aggregation
+min             - Minimum aggregation
+count           - Count aggregation
+
+================================================================================
+OPERATORS
+================================================================================
+
+Arithmetic:     +  -  *  /  %  **
+Relational:     ==  !=  <  >  <=  >=
+Logical:        and  or  not
+Assignment:     =
+Range:          ..
+Access:         .
+
+================================================================================
+SYNTACTIC GRAMMAR
+================================================================================
+
+<program>         ::= { <statement> }
+
+<statement>       ::= <declaration>
+                    | <assignment>
+                    | <read_statement>
+                    | <filter_statement>
+                    | <transform_statement>
+                    | <emit_statement>
+                    | <alert_statement>
+                    | <if_statement>
+                    | <while_statement>
+                    | <for_statement>
+                    | <comment>
+
+--------------------------------------------------------------------------------
+DECLARATIONS AND ASSIGNMENTS
+--------------------------------------------------------------------------------
+
+<declaration>     ::= 'var' <identifier> '=' <expression>
+
+<assignment>      ::= <identifier> '=' <expression>
+
+--------------------------------------------------------------------------------
+DATA INPUT/OUTPUT STATEMENTS
+--------------------------------------------------------------------------------
+
+<read_statement>  ::= 'read' <identifier> 'from' <source>
+
+<source>          ::= <string>
+                    | <identifier>
+
+<emit_statement>  ::= 'emit' <expression> 'to' <destination>
+
+<destination>     ::= <string>
+                    | <identifier>
+
+<alert_statement> ::= 'alert' <string> [ 'when' <condition> ]
+
+--------------------------------------------------------------------------------
+DATA PROCESSING STATEMENTS
+--------------------------------------------------------------------------------
+
+<filter_statement> ::= 'filter' <identifier> 'where' <condition>
+
+<transform_statement> ::= 'transform' <identifier> 'with' <transformation>
+
+<transformation>  ::= <expression>
+                    | <aggregation>
+
+<aggregation>     ::= <agg_function> '(' <identifier> ')'
+
+<agg_function>    ::= 'avg' | 'sum' | 'max' | 'min' | 'count'
+
+--------------------------------------------------------------------------------
+CONTROL FLOW STATEMENTS
+--------------------------------------------------------------------------------
+
+<if_statement>    ::= 'if' <condition> '{' { <statement> } '}'
+                      [ 'else' '{' { <statement> } '}' ]
+
+<while_statement> ::= 'while' <condition> '{' { <statement> } '}'
+
+<for_statement>   ::= 'for' <identifier> 'in' <range> '{' { <statement> } '}'
+
+<range>           ::= <expression> '..' <expression>
+                    | <identifier>
+
+--------------------------------------------------------------------------------
+EXPRESSIONS AND CONDITIONS
+--------------------------------------------------------------------------------
+
+<expression>      ::= <term> { ( '+' | '-' ) <term> }
+
+<term>            ::= <factor> { ( '*' | '/' | '%' ) <factor> }
+
+<factor>          ::= <base> [ '**' <factor> ]
+
+<base>            ::= <number>
+                    | <string>
+                    | <boolean>
+                    | <identifier>
+                    | <function_call>
+                    | <member_access>
+                    | '(' <expression> ')'
+                    | '-' <base>
+
+<member_access>   ::= <identifier> '.' <identifier>
+
+<function_call>   ::= <identifier> '(' [ <arg_list> ] ')'
+
+<arg_list>        ::= <expression> { ',' <expression> }
+
+<condition>       ::= <or_condition>
+
+<or_condition>    ::= <and_condition> { 'or' <and_condition> }
+
+<and_condition>   ::= <not_condition> { 'and' <not_condition> }
+
+<not_condition>   ::= [ 'not' ] <comparison>
+
+<comparison>      ::= <expression> <relational_op> <expression>
+                    | <expression>
+
+<relational_op>   ::= '==' | '!=' | '<' | '>' | '<=' | '>='
+
+================================================================================
+NOTES
+================================================================================
+
+1. Whitespace and comments are ignored by the parser
+2. Statements can be terminated with optional semicolons (not required)
+3. Identifiers are case-sensitive
+4. Block statements use braces { } for grouping
+5. String literals can use single or double quotes
+6. Numbers can be integers or floating-point values
+7. Member access allows accessing properties of data objects (e.g., sensor.value)
+
+================================================================================
+PRECEDENCE (HIGHEST TO LOWEST)
+================================================================================
+
+1. Function calls, member access, parentheses
+2. Exponentiation (**)
+3. Unary minus (-)
+4. Multiplication, division, modulo (*, /, %)
+5. Addition, subtraction (+, -)
+6. Relational operators (==, !=, <, >, <=, >=)
+7. Logical NOT (not)
+8. Logical AND (and)
+9. Logical OR (or)
+
+================================================================================
+END OF BNF GRAMMAR
+================================================================================
